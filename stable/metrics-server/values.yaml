@@ -1,14 +1,14 @@
 rbac:
   # Specifies whether RBAC resources should be created
   create: true
-  pspEnabled: false
+  pspEnabled: true
 
 serviceAccount:
   # Specifies whether a ServiceAccount should be created
   create: true
   # The name of the ServiceAccount to use.
   # If not set and create is true, a name is generated using the fullname template
-  name:
+  name: "metrics-server"
 
 apiService:
   # Specifies if the v1beta1.metrics.k8s.io API service should be created.
@@ -33,14 +33,33 @@ image:
 
 args:
   - --logtostderr
-# enable this if you have self-signed certificates, see: https://github.com/kubernetes-incubator/metrics-server
-#  - --kubelet-insecure-tls
+  # enable this if you have self-signed certificates, see: https://github.com/kubernetes-incubator/metrics-server
+  - --kubelet-insecure-tls
+  - --authentication-skip-lookup=true
+  - --client-ca-file=/srv/kubernetes/ca.crt
+  - --enable-swagger-ui=false
+  - --logtostderr=true
+  - --metric-resolution=30s
+  - --requestheader-client-ca-file=/srv/kubernetes/ca.crt
+  - --requestheader-allowed-names=
+  - --requestheader-extra-headers-prefix=X-Remote-Extra-
+  - --requestheader-group-headers=X-Remote-Group
+  - --requestheader-username-headers=X-Remote-User
+  - --secure-port=443
+  - --stderrthreshold=0
+  - --tls-cert-file=/srv/kubernetes/server.crt
+  - --tls-private-key-file=/srv/kubernetes/server.key
+  - -v=5
 
 resources: {}
 
-nodeSelector: {}
+nodeSelector: {
+	node-role.kubernetes.io/master: ""
+}
 
-tolerations: []
+tolerations: [
+	key: node-role.kubernetes.io/master,
+]
 
 affinity: {}
 

@@ -36,6 +36,32 @@ spec:
           resources:
 {{ toYaml . | indent 12 }}
         {{- end }}
+          volumeMounts:
+          - mountPath: /srv/kubernetes/
+            name: srv
+            readOnly: true
+          - mountPath: /etc/kubernetes/
+            name: k8s
+            readOnly: true
+          - mountPath: /etc/ssl/certs
+            name: certs
+            readOnly: true
+          - mountPath: /etc/pki
+            name: pki
+            readOnly: true
+      volumes:
+      - hostPath:
+          path: /srv/kubernetes
+        name: srv
+      - hostPath:
+          path: /etc/kubernetes
+        name: k8s
+      - hostPath:
+          path: /etc/ssl/certs
+        name: certs
+      - hostPath:
+          path: /etc/pki
+        name: pki
     {{- with .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml . | indent 8 }}
