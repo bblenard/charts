@@ -160,7 +160,7 @@ files:
         connect_timeout: 1s
         hosts:
         - socket_address:
-            address: release-name-envoy-control-plane-helm
+            address: envoy-control-plane-helm
             port_value: 8080
         http2_protocol_options: {}
 
